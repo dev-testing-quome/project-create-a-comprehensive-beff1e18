@@ -1,0 +1,211 @@
+```json
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Project Create a Comprehensive Permit Management System",
+    "version": "v1",
+    "description": "API for managing government permits"
+  },
+  "servers": [
+    {
+      "url": "https://api.example.com/v1",
+      "description": "Production server"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health check",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "OK" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Unauthorized" }
+        },
+        "security": []
+      }
+    },
+    "/permits": {
+      "get": {
+        "summary": "Get permits",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": { "type": "integer" },
+            "description": "Limit the number of results"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": { "type": "integer" },
+            "description": "Offset for pagination"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of permits",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Permit" }
+                }
+              }
+            }
+          }
+        },
+        "security": [{"bearerAuth": []}]
+      },
+      "post": {
+        "summary": "Create permit",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Permit" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Permit created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Permit" }
+              }
+            }
+          },
+          "400": { "description": "Bad Request" }
+        },
+        "security": [{"bearerAuth": []}]
+      }
+    },
+    "/permits/{id}": {
+      "get": {
+        "summary": "Get permit by ID",
+        "parameters": [
+          { "name": "id", "in": "path", "schema": { "type": "integer" }, "required": true }
+        ],
+        "responses": {
+          "200": {
+            "description": "Permit details",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Permit" }
+              }
+            }
+          },
+          "404": { "description": "Permit not found" }
+        },
+        "security": [{"bearerAuth": []}]
+      },
+      "put": {
+        "summary": "Update permit",
+        "parameters": [
+          { "name": "id", "in": "path", "schema": { "type": "integer" }, "required": true }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Permit" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Permit updated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Permit" }
+              }
+            }
+          },
+          "404": { "description": "Permit not found" },
+          "400": { "description": "Bad Request" }
+        },
+        "security": [{"bearerAuth": []}]
+      },
+      "delete": {
+        "summary": "Delete permit",
+        "parameters": [
+          { "name": "id", "in": "path", "schema": { "type": "integer" }, "required": true }
+        ],
+        "responses": {
+          "204": { "description": "Permit deleted" },
+          "404": { "description": "Permit not found" }
+        },
+        "security": [{"bearerAuth": []}]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Permit": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "readOnly": true },
+          "applicantName": { "type": "string" },
+          "permitType": { "type": "string" },
+          "applicationDate": { "type": "string", "format": "date" },
+          "status": { "type": "string" }
+        },
+        "required": ["applicantName", "permitType", "applicationDate", "status"]
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
+```

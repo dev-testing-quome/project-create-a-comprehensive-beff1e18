@@ -1,0 +1,1 @@
+// main.tsx usually only renders the App, so testing it directly might not be necessary.  Focus testing on App.tsx instead.
